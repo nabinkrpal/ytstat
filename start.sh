@@ -7,4 +7,4 @@ pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 
 # Start the Node.js server
-nodemon server.js
+node server.js
