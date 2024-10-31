@@ -2,9 +2,9 @@
     "name": "youtube-comment-sentiment-analysis-main",
     "version": "1.0.0",
     "description": "YT Video Comments Sentiment analysis Automation",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
-        "star": "bash ./start.sh"
+        "start": "bash ./start.sh"
     },
     "keywords": [],
     "author": "",
