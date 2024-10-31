@@ -1,8 +1,8 @@
 {
     "name": "youtube-comment-sentiment-analysis-main",
     "version": "1.0.0",
-    "description": "YT Video Comments Sentiment analysis Automation with Obsei",
-    "main": "index.js",
+    "description": "YT Video Comments Sentiment analysis Automation",
+    "main": "server.js",
     "scripts": {
         "start": "bash ./start.sh"
     },
