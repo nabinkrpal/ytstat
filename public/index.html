@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Sentiment Analysis</title>
+    <style>
+        /* Linear gradient background for the entire page */
+        body {
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Center the main content */
+        h1 {
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style for the form and results container */
+        #results {
+            display: none;
+            margin-top: 20px;
+            color: #ffffff;
+        }
+
+        /* Circular progress container */
+        .progress-circle {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        
+        
+        /* Text in center of the circle */
+        .progress-text {
+            position: absolute;
+            z-index: 2;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .outer{
+        height: 160px;
+        width: 200px;
+        border-radius: 50%;
+        box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),-6px -6px 10px -1px rgba(255,255,255,0.7);
+        padding: 20px;
+        
+        }
+        
+        .inner{
+            height: 160px;
+            width: 160px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 4px 4px 6px -1px rgba(0,0,0,0.2),inset -4px -4px 4px -1px rgba(255,255,255,0.7),
+            -0.5px -0.5px 0px rgba(255,255,255,1),
+            0.5px 0.5px 0px rgba(0,0,0,0.15),
+            0px 12px 10px -10px rgba(255,255,255,0.05);
+        }
+        /* 562-562*0.65 */
+        #positive circle{
+            fill:none;
+            stroke: url(#GradientColor);
+            stroke-width: 20px;
+            stroke-dasharray: 562;
+            stroke-dashoffset: 562;
+        }
+        #neutral circle{
+            fill:none;
+            stroke: url(#GradientColor1);
+            stroke-width: 20px;
+            stroke-dasharray: 562;
+            stroke-dashoffset: 562;
+        }
+        #negative circle{
+            fill:none;
+            stroke: url(#GradientColor2);
+            stroke-width: 20px;
+            stroke-dasharray: 562;
+            stroke-dashoffset: 562;
+        }
+        svg{
+            rotate: 90deg;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        /* Arrange circles horizontally */
+        .sentiment-container {
+            height: 250px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        /* Style for trending topics box */
+        #topics {
+            max-height: 200px;
+            overflow-y: scroll;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Input form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>YouTube Sentiment Analysis</h1>
+    <form id="urlForm">
+        <label for="url">Enter YouTube Video URL:</label>
+        <input type="text" id="url" required>
+        <button type="submit">Get Analysis</button>
+    </form>
+
+    <div id="results">
+        <h2>Sentiment Analysis</h2>
+        
+        <div class="sentiment-container">
+            <!-- Sentiment Percentage Circles with dynamic fill -->
+            <div id="positive" class="progress-circle positive">
+                <div class="outer">
+                    <div class="inner">
+                        <div class="progress-text">0%</div>
+                    </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="200px">
+                <defs>
+                    <linearGradient id="GradientColor">
+                        <stop offset="0%" stop-color="#90EE90" />
+                        <stop offset="100%" stop-color="#228B22" /> 
+                    </linearGradient>
+                    
+                </defs>
+                <circle cx="100" cy="100" r="90" stroke-linecap="round" />
+            </svg>
+            </div>
+            <div id="neutral" class="progress-circle neutral">
+                <div class="outer">
+                    <div class="inner">
+                        <div class="progress-text">0%</div>
+                    </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="200px">
+                <defs>
+                    <linearGradient id="GradientColor1">
+                        <stop offset="0%" stop-color="#E6E6FA
+                        " /> <!-- Yellow -->
+                        <stop offset="100%" stop-color="#4B0082" /> <!-- Dark Yellow -->
+                    </linearGradient>
+                    
+                </defs>
+                <circle cx="100" cy="100" r="90" stroke-linecap="round" />
+        </svg>
+            </div>
+            <div id="negative" class="progress-circle negative">
+                <div class="outer">
+                    <div class="inner">
+                        <div class="progress-text">0%</div>
+                    </div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="200px">
+                <defs>
+                    <linearGradient id="GradientColor2">
+                        <stop offset="0%" stop-color="#F08080" /> <!-- Red -->
+                        <stop offset="100%" stop-color="#DC143C" /> <!-- Dark Red -->
+                    </linearGradient>
+                    
+                </defs>
+                <circle cx="100" cy="100" r="90" stroke-linecap="round" />
+        </svg>
+            </div>
+        </div>
+
+        <h3>Trending Topics</h3>
+        <div id="topics">
+            <!-- Trending topics will be listed here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const url = document.getElementById('url').value;
+
+            // Send URL to Node.js server, which will pass it to Python backend
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+
+            // Display analysis results
+            document.getElementById('results').style.display = 'block';
+            displaySentiment(data.sentiment);
+            displayTopics(data.topics);
+        });
+
+        function displaySentiment(sentiment) {
+            // Update each sentiment percentage circle with data from backend
+            setProgress(document.getElementById('positive'), sentiment.positive);
+            setProgress(document.getElementById('neutral'), sentiment.neutral);
+            setProgress(document.getElementById('negative'), sentiment.negative);
+        }
+
+        function setProgress(element, percentage) {
+            let progressText = element.querySelector('.outer .inner .progress-text');
+            progressText.innerHTML=`${percentage.toFixed(1)}%`;
+            
+            let strokedashoffset = 562 - (562 * percentage * 0.01);
+            let pathk=element.querySelector('svg circle');
+            pathk.style.setProperty('stroke-dashoffset', strokedashoffset);
+            // Set percentage text inside the circle
+            
+        }
+
+        function displayTopics(topics) {
+            const topicsDiv = document.getElementById('topics');
+            topicsDiv.innerHTML = topics.map(topic => `<div>${topic}</div>`).join('');
+        }
+    </script>
+</body>
+</html>
