@@ -8,13 +8,13 @@ from googleapiclient.discovery import build
 import spacy
 from collections import Counter
 
-import json
-api_key=""
+# import json
+# api_key=""
 
-with open('config.json') as config_file:
-    config = json.load(config_file)
-    api_key = config['api_key']
-YOUTUBE_API_KEY = api_key
+# with open('config.json') as config_file:
+#     config = json.load(config_file)
+#     api_key = config['api_key']
+YOUTUBE_API_KEY = "AIzaSyCh9tny8fDCnuKKPhnayIxPSw2EZmu_48w"
 # 'AIzaSyCh9tny8fDCnuKKPhnayIxPSw2EZmu_48w'  # Replace with your API 
 youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
 nlp = spacy.load('en_core_web_sm')
