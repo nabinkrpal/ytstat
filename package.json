@@ -4,7 +4,7 @@
     "description": "YT Video Comments Sentiment analysis Automation with Obsei",
     "main": "index.js",
     "scripts": {
-      "start": "./start.sh"
+        "start": "bash ./start.sh"
     },
     "keywords": [],
     "author": "",
