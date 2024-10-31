@@ -12,10 +12,9 @@
 # # Start the Node.js server
 # node server.js
 
-#!/bin/bash
 
 # Install Python dependencies
-echo "Installing Python dependencies..."
+echo "Installing Python dependencies....."
 pip install -r requirements.txt
 
 # Download necessary TextBlob corpora if required
