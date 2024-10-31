@@ -4,7 +4,7 @@
     "description": "YT Video Comments Sentiment analysis Automation",
     "main": "server.js",
     "scripts": {
-        "star": "nodemon server.js"
+        "star": "start.sh"
     },
     "keywords": [],
     "author": "",
