@@ -237,30 +237,29 @@
     </div>
 
     <script>
-        // document.getElementById('urlForm').addEventListener('submit', async function (e) {
-        //     e.preventDefault();
-        //     const url = document.getElementById('url').value;
+        function getYouTubeVideoID(url) {
+            const ytRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = url.match(ytRegex);
+            return match ? match[1] : null; // Return video ID if matched, otherwise null
+        }
 
-        //     // Send URL to Node.js server, which will pass it to Python backend
-        //     const response = await fetch('/analyze', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ url })
-        //     });
-
-        //     const data = await response.json();
-
-        //     // Display analysis results
-        //     document.getElementById('results').style.display = 'block';
-        //     displaySentiment(data.sentiment);
-        //     displayTopics(data.topics);
-        // });
-        cument.getElementById('urlForm').addEventListener('submit', async function (e) {
+        // Add this to the form submit event handler
+        document.getElementById('urlForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const url = document.getElementById('url').value;
             const errorMessage = document.getElementById('error-message');
 
+            // Validate and extract video ID
+            const videoID = getYouTubeVideoID(url);
+            if (!videoID) {
+                errorMessage.textContent = 'Invalid YouTube URL. Please enter a valid YouTube video link.';
+                return;
+            } else {
+                errorMessage.textContent = ''; // Clear any previous error
+            }
+
             try {
+                // Send request to server
                 const response = await fetch('/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -273,12 +272,11 @@
                 }
 
                 const data = await response.json();
-                errorMessage.textContent = ''; // Clear any previous errors
                 document.getElementById('results').style.display = 'block';
                 displaySentiment(data.sentiment);
                 displayTopics(data.topics);
             } catch (error) {
-                errorMessage.textContent = error.message; // Show error message on invalid URL
+                errorMessage.textContent = error.message; // Display server-side error if any
             }
         });
         function displaySentiment(sentiment) {
