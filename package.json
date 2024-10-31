@@ -1,18 +1,17 @@
 {
-  "name": "youtube-comment-sentiment-analysis-main",
-  "version": "1.0.0",
-  "description": "YT Video Comments Sentiment analysis Automation with Obsei",
-  "main": "index.js",
-  "scripts": {
-    "build": "npm i",
-    "dev": "nodemon server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.1",
-    "nodemon": "^3.1.7"
-  }
+    "name": "youtube-comment-sentiment-analysis-main",
+    "version": "1.0.0",
+    "description": "YT Video Comments Sentiment analysis Automation with Obsei",
+    "main": "index.js",
+    "scripts": {
+      "start": "./start.sh"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "cors": "^2.8.5",
+      "express": "^4.21.1",
+      "nodemon": "^3.1.7"
+    }
 }
