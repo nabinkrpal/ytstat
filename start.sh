@@ -12,7 +12,12 @@
 # # Start the Node.js server
 # node server.js
 
+if [ ! -d "env" ]; then
+    python3 -m venv env
+fi
 
+# Activate the virtual environment
+source env/bin/activate
 # Install Python dependencies
 echo "Installing Python dependencies....."
 pip install -r requirements.txt
