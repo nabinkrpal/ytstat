@@ -1,6 +1,6 @@
 #!/bin/bash
 python -m venv venv
-source venv/bin/activate
+source .\venv\Scripts\Activate.ps1
 # Install Python dependencies
 pip install -r requirements.txt
 
