@@ -31,13 +31,19 @@
             margin-top: 20px;
             color: #ffffff;
         }
-
+        #results h2{
+            width: 50%;        /* Set a width for the heading */
+            margin: 0 auto;    /* Center horizontally */
+            text-align: center; 
+        }
+        
         /* Circular progress container */
         .progress-circle {
             width: 200px;
             height: 200px;
             position: relative;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-size: 1.2em;
@@ -54,8 +60,8 @@
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         .outer{
-        height: 160px;
-        width: 200px;
+        height: 200px;
+        width: 160px;
         border-radius: 50%;
         box-shadow: 6px 6px 10px -1px rgba(0,0,0,0.15),-6px -6px 10px -1px rgba(255,255,255,0.7);
         padding: 20px;
@@ -78,27 +84,28 @@
         #positive circle{
             fill:none;
             stroke: url(#GradientColor);
-            stroke-width: 20px;
+            stroke-width: 18px;
             stroke-dasharray: 562;
             stroke-dashoffset: 562;
         }
         #neutral circle{
             fill:none;
             stroke: url(#GradientColor1);
-            stroke-width: 20px;
+            stroke-width: 18px;
             stroke-dasharray: 562;
             stroke-dashoffset: 562;
         }
         #negative circle{
             fill:none;
             stroke: url(#GradientColor2);
-            stroke-width: 20px;
+            stroke-width: 18px;
             stroke-dasharray: 562;
             stroke-dashoffset: 562;
         }
         svg{
             rotate: 90deg;
             position: absolute;
+            margin-top: 35px;
             top: 0;
             left: 0;
         }
@@ -109,11 +116,16 @@
             display: flex;
             gap: 20px;
             justify-content: center;
+            flex-wrap: wrap;
             align-items: center;
             margin-top: 20px;
+            padding-bottom:20px ;
         }
 
         /* Style for trending topics box */
+        #topic-head{
+            padding-top: 10px;
+        }
         #topics {
             max-height: 200px;
             overflow-y: scroll;
@@ -172,35 +184,36 @@
     <div id="error-message"></div>
 
     <div id="results">
-        <h2>Sentiment Analysis</h2>
-        
+        <h2>Sentiment Analysis</h2>        
         <div class="sentiment-container">
             <!-- Sentiment Percentage Circles with dynamic fill -->
             <div id="positive" class="progress-circle positive">
+                <h3>Positive</h3>
                 <div class="outer">
                     <div class="inner">
                         <div class="progress-text">0%</div>
                     </div>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="200px">
-                <defs>
-                    <linearGradient id="GradientColor">
-                        <stop offset="0%" stop-color="#90EE90" />
-                        <stop offset="100%" stop-color="#228B22" /> 
-                    </linearGradient>
-                    
-                </defs>
-                <circle cx="100" cy="100" r="90" stroke-linecap="round" />
-            </svg>
+                    <defs>
+                        <linearGradient id="GradientColor">
+                            <stop offset="0%" stop-color="#90EE90" />
+                            <stop offset="100%" stop-color="#228B22" /> 
+                        </linearGradient>
+                        
+                    </defs>
+                    <circle cx="100" cy="100" r="90" stroke-linecap="round" />
+                </svg>
             </div>
             <div id="neutral" class="progress-circle neutral">
+                <h3>Neutral</h3>
                 <div class="outer">
                     <div class="inner">
                         <div class="progress-text">0%</div>
                     </div>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="200px">
-                <defs>
+                    <defs>
                     <linearGradient id="GradientColor1">
                         <stop offset="0%" stop-color="#E6E6FA
                         " /> <!-- Yellow -->
@@ -209,9 +222,10 @@
                     
                 </defs>
                 <circle cx="100" cy="100" r="90" stroke-linecap="round" />
-        </svg>
+                </svg>
             </div>
             <div id="negative" class="progress-circle negative">
+                <h3>Negative</h3>
                 <div class="outer">
                     <div class="inner">
                         <div class="progress-text">0%</div>
@@ -226,11 +240,11 @@
                     
                 </defs>
                 <circle cx="100" cy="100" r="90" stroke-linecap="round" />
-        </svg>
+                </svg>
             </div>
         </div>
 
-        <h3>Trending Topics</h3>
+        <h2 id="topic-head">Trending Topics</h2>
         <div id="topics">
             <!-- Trending topics will be listed here dynamically -->
         </div>
@@ -284,7 +298,9 @@
             setProgress(document.getElementById('positive'), sentiment.positive);
             setProgress(document.getElementById('neutral'), sentiment.neutral);
             setProgress(document.getElementById('negative'), sentiment.negative);
+            
         }
+
 
         function setProgress(element, percentage) {
             let progressText = element.querySelector('.outer .inner .progress-text');
@@ -293,7 +309,10 @@
             let strokedashoffset = 562 - (562 * percentage * 0.01);
             let pathk=element.querySelector('svg circle');
             pathk.style.setProperty('stroke-dashoffset', strokedashoffset);
-            // Set percentage text inside the circle
+            // Set percentage text inside the 
+            // let sentiment=document.getElementById('#results');
+            // sentiment.style.setProperty('display','flex');
+            // sentiment.style.setProperty('flex-direction','column');
             
         }
 

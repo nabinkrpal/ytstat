@@ -1,27 +1,23 @@
-# sentiment_analysis.py
 import sys
 import re
 import json
-import time
 from textblob import TextBlob
 from googleapiclient.discovery import build
 import spacy
 from collections import Counter
 
-# import json
-# api_key=""
+# Setup YouTube API and Spacy
+from dotenv import load_dotenv
+import os
 
-# with open('config.json') as config_file:
-#     config = json.load(config_file)
-#     api_key = config['api_key']
-YOUTUBE_API_KEY = "AIzaSyCh9tny8fDCnuKKPhnayIxPSw2EZmu_48w"
-# 'AIzaSyCh9tny8fDCnuKKPhnayIxPSw2EZmu_48w'  # Replace with your API 
+# Load environment variables from .env file
+load_dotenv()
+YOUTUBE_API_KEY = os.getenv("API_KEY")
 youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
 nlp = spacy.load('en_core_web_sm')
 
-# def is_youtube_url(url):
-#     match = re.search(r"(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})", url)
-#     return match.group(1) if match else None
+# Keywords to detect suggested topics in comments
+suggestion_keywords = ["want to see", "please make", "make a video on", "video on", "video about"]
 
 def is_youtube_url(url):
     """
@@ -48,28 +44,43 @@ def fetch_comments(video_id):
 
 def analyze_comments(comments):
     sentiment_counts = {"positive": 0, "neutral": 0, "negative": 0}
-    topics = []
+    suggested_topics = []
 
     for comment in comments:
         blob = TextBlob(comment)
         polarity = blob.sentiment.polarity
         if polarity > 0:
             sentiment_counts["positive"] += 1
-            topics.extend(extract_topics(comment))
         elif polarity == 0:
             sentiment_counts["neutral"] += 1
-            topics.extend(extract_topics(comment))
         else:
             sentiment_counts["negative"] += 1
 
+        # Check for topic suggestions in comments
+        if any(keyword in comment.lower() for keyword in suggestion_keywords):
+            suggested_topics.extend(extract_topics(comment))
+
+    # Calculate sentiment percentages
     total = sum(sentiment_counts.values())
     sentiment_percentages = {k: (v / total) * 100 for k, v in sentiment_counts.items()}
-    trending_topics = [topic for topic, count in Counter(topics).most_common(20)]
+
+    # Count and filter trending topics (appearing more than once)
+    trending_topics = [topic for topic, count in Counter(suggested_topics).items() if count > 1]
     return sentiment_percentages, trending_topics
 
 def extract_topics(text):
+    """
+    Extracts meaningful noun phrases from text using NLP without predefined non-topic words.
+    :param text: String containing comment text.
+    :return: List of meaningful topics.
+    """
     doc = nlp(text)
-    return [chunk.text.lower() for chunk in doc.noun_chunks]
+    topics = []
+    for chunk in doc.noun_chunks:
+        # Only include chunks that are coherent noun phrases and not single pronouns
+        if len(chunk) > 1 or chunk[0].pos_ == 'NOUN':
+            topics.append(chunk.text.lower().strip())
+    return topics
 
 if __name__ == "__main__":
     url = sys.argv[1]
