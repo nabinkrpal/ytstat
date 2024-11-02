@@ -15,8 +15,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            height: 1000px;
+            height: 1200px;
         }
 
         /* Center the main content */
@@ -177,9 +176,14 @@
             font-weight: bold;
             margin-top: 10px;
         }
-        @media (max-width: 681px) {
+       
+        @media (max-width: 690px) {
+            body{
+                height:1500px ;
+            }
             .sentiment-container{
                 flex-direction: column;
+                gap:50px;
                 padding-bottom:10vh;
                 height: auto;
             }
