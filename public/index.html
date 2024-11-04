@@ -176,6 +176,26 @@
             font-weight: bold;
             margin-top: 10px;
         }
+        #loader {
+            display: none;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 48%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
        
         @media (max-width: 690px) {
             body{
@@ -205,6 +225,7 @@
 </head>
 <body>
     <h1>YouTube Sentiment Analysis</h1>
+    <div id="loader"></div>        
     <form id="urlForm">
         <label for="url">Enter YouTube Video URL:</label>
         <input type="text" id="url" required>
@@ -213,7 +234,7 @@
     <div id="error-message"></div>
 
     <div id="results">
-        <h2>Sentiment Analysis</h2>        
+        <h2>Sentiment Analysis</h2>
         <div class="sentiment-container">
             <!-- Sentiment Percentage Circles with dynamic fill -->
             <div id="positive" class="progress-circle positive">
@@ -291,7 +312,10 @@
             e.preventDefault();
             const url = document.getElementById('url').value;
             const errorMessage = document.getElementById('error-message');
+            const loader = document.getElementById('loader');
 
+            // Show loader
+            loader.style.display = 'block';
             // Validate and extract video ID
             const videoID = getYouTubeVideoID(url);
             if (!videoID) {
@@ -320,7 +344,11 @@
                 displayTopics(data.topics);
             } catch (error) {
                 errorMessage.textContent = error.message; // Display server-side error if any
+            }finally {
+                // Hide loader
+                loader.style.display = 'none';
             }
+
         });
         function displaySentiment(sentiment) {
             // Update each sentiment percentage circle with data from backend
